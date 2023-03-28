@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Elsa.Models;
 using Elsa.Persistence.Specifications;
 using Elsa.Services;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -27,6 +28,9 @@ namespace Elsa.Persistence.MongoDb.Stores
                 entity.Id = IdGenerator.Generate();
 
             var filter = GetFilter(entity.Id);
+
+            var bson = entity.ToBsonDocument();
+            var length = bson.ToBson().Length;
             await Collection.ReplaceOneAsync(filter, entity, new ReplaceOptions { IsUpsert = true }, cancellationToken);
         }
         
