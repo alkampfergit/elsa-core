@@ -22,19 +22,16 @@ namespace Elsa.Persistence.MongoDb.Stores
         protected IIdGenerator IdGenerator { get; }
         protected IMongoCollection<T> Collection { get; }
 
-        public async Task SaveAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task SaveAsync(T entity, CancellationToken cancellationToken = default)
         {
             if (entity.Id == null!)
                 entity.Id = IdGenerator.Generate();
 
-            var filter = GetFilter(entity.Id);
-
-            var bson = entity.ToBsonDocument();
-            var length = bson.ToBson().Length;
+            var filter = GetFilter(entity.Id);           
             await Collection.ReplaceOneAsync(filter, entity, new ReplaceOptions { IsUpsert = true }, cancellationToken);
         }
         
-        public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             if (entity.Id == null!)
                 entity.Id = IdGenerator.Generate();
@@ -45,7 +42,7 @@ namespace Elsa.Persistence.MongoDb.Stores
 
         public Task AddAsync(T entity, CancellationToken cancellationToken = default) => SaveAsync(entity, cancellationToken);
 
-        public async Task AddManyAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+        public virtual async Task AddManyAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
         {
             var list = entities.ToList();
 
@@ -58,30 +55,30 @@ namespace Elsa.Persistence.MongoDb.Stores
             await Collection.InsertManyAsync(list, default, cancellationToken);
         }
 
-        public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             var filter = GetFilter(entity.Id);
             await Collection.DeleteOneAsync(filter, cancellationToken);
         }
 
-        public async Task<int> DeleteManyAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
+        public virtual async Task<int> DeleteManyAsync(ISpecification<T> specification, CancellationToken cancellationToken = default)
         {
             var filter = Builders<T>.Filter.Where(specification.ToExpression());
             var result = await Collection.DeleteManyAsync(filter, cancellationToken);
             return (int)result.DeletedCount;
         }
 
-        public async Task<IEnumerable<T>> FindManyAsync(ISpecification<T> specification, IOrderBy<T>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default) =>
+        public virtual async Task<IEnumerable<T>> FindManyAsync(ISpecification<T> specification, IOrderBy<T>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default) =>
             await Collection.AsQueryable().Apply(specification).Apply(orderBy).Apply(paging).ToListAsync(cancellationToken);
 
-        public async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default) =>
+        public virtual async Task<int> CountAsync(ISpecification<T> specification, CancellationToken cancellationToken = default) =>
             await Collection.AsQueryable().Apply(specification).CountAsync(cancellationToken);
 
-        public async Task<T?> FindAsync(ISpecification<T> specification, CancellationToken cancellationToken = default) => await Collection.AsQueryable().Where(specification.ToExpression()).FirstOrDefaultAsync(cancellationToken);
+        public virtual async Task<T?> FindAsync(ISpecification<T> specification, CancellationToken cancellationToken = default) => await Collection.AsQueryable().Where(specification.ToExpression()).FirstOrDefaultAsync(cancellationToken);
 
         protected FilterDefinition<T> GetFilter(string id) => Builders<T>.Filter.Where(x => x.Id == id);
 
-        public async Task<IEnumerable<TOut>> FindManyAsync<TOut>(ISpecification<T> specification, System.Linq.Expressions.Expression<System.Func<T, TOut>> funcMapping, IOrderBy<T>? orderBy = null, IPaging? paging = null, CancellationToken cancellationToken = default) where TOut : class
+        public virtual async Task<IEnumerable<TOut>> FindManyAsync<TOut>(ISpecification<T> specification, System.Linq.Expressions.Expression<System.Func<T, TOut>> funcMapping, IOrderBy<T>? orderBy = null, IPaging? paging = null, CancellationToken cancellationToken = default) where TOut : class
         => await Collection.AsQueryable().Apply(specification).Apply(orderBy).Apply(paging).Select(funcMapping).ToListAsync(cancellationToken);
     }
 }

@@ -9,6 +9,9 @@ using Elsa.Core.IntegrationTests.Workflows;
 using Elsa.Persistence;
 using Elsa.Testing.Shared;
 using Elsa.Testing.Shared.Helpers;
+using Elsa.Providers.WorkflowStorage;
+using Storage.Net;
+using Elsa.Providers.Workflows;
 
 namespace Elsa.Core.IntegrationTests.Persistence.MongoDb
 {
@@ -49,7 +52,29 @@ namespace Elsa.Core.IntegrationTests.Persistence.MongoDb
         public async Task APersistableWorkflowInstanceReallyBigMustBePersisted([WithPersistableWorkflow, WithMongoDb] ElsaHostBuilderBuilder hostBuilderBuilder)
         {
             var hostBuilder = hostBuilderBuilder.GetHostBuilder();
-            hostBuilder.ConfigureServices((ctx, services) => services.AddHostedService<HostedBigWorkflowRunner>());
+            hostBuilderBuilder.ElsaCallbacks.Add(elsa =>
+            {
+                elsa.UseDefaultWorkflowStorageProvider<BlobStorageWorkflowStorageProvider>();
+            });
+            hostBuilder.ConfigureServices((ctx, services) =>
+            {
+                services.AddHostedService<HostedBigWorkflowRunner>();
+                services.Configure<BlobStorageWorkflowStorageProviderOptions>(options =>
+                {
+                    options.BlobStorageFactory = () => StorageFactory.Blobs.DirectoryFiles("c:\\temp\\elsatest");
+                });
+
+                services.Configure<BlobStorageWorkflowProviderOptions>(options =>
+                {
+                    options.BlobStorageFactory = () => StorageFactory.Blobs.DirectoryFiles("c:\\temp\\elsatest");
+                });
+
+                //services.AddElsa(elsa =>
+                //{
+                //    elsa.UseDefaultWorkflowStorageProvider<BlobStorageWorkflowStorageProvider>();
+                //});
+            });
+
             var host = await hostBuilder.StartAsync();
         }
 
