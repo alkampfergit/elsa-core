@@ -22,14 +22,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.7" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.9" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.7" />
         <PackageReference Include="NJsonSchema.CodeGeneration.TypeScript" Version="10.5.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 

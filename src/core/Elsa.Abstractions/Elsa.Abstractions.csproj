@@ -17,11 +17,11 @@
         <PackageReference Include="DistributedLock.Core" Version="1.0.4" />
         <PackageReference Include="LinqKit.Core" Version="1.2.5" />
         <PackageReference Include="MediatR" Version="12.4.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.7" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.7" />
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.7" />
         <PackageReference Include="NodaTime" Version="3.0.9" />
         <PackageReference Include="NodaTime.Serialization.JsonNet" Version="3.0.0" />
         <PackageReference Include="Open.Linq.AsyncExtensions" Version="1.2.0" />
@@ -31,6 +31,10 @@
         </PackageReference>
         <PackageReference Include="System.Text.Json" Version="10.0.0" />
         <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 </Project>

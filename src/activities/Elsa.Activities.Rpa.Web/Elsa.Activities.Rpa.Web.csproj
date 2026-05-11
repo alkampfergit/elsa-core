@@ -20,12 +20,16 @@
     
     <ItemGroup>
       <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.1.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.3.0" />
       <PackageReference Include="Selenium.Support" Version="3.141.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\core\Elsa.Core\Elsa.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 </Project>

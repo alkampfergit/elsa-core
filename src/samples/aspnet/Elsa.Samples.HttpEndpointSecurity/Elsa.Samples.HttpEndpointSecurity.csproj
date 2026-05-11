@@ -6,7 +6,7 @@
     
     <ItemGroup>
         <PackageReference Include="System.Text.Encodings.Web" Version="10.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     </ItemGroup>
 
     <ItemGroup>

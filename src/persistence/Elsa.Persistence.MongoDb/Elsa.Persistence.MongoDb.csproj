@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\..\..\common.props"/>
-    <Import Project="..\..\..\configureawait.props"/>
+    <Import Project="..\..\..\common.props" />
+    <Import Project="..\..\..\configureawait.props" />
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -14,12 +14,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MongoDb.Bson.NodaTime" Version="2.1.0"/>
-        <PackageReference Include="MongoDB.Driver" Version="2.19.0"/>
+        <PackageReference Include="MongoDb.Bson.NodaTime" Version="2.1.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\core\Elsa.Core\Elsa.Core.csproj"/>
+        <ProjectReference Include="..\..\core\Elsa.Core\Elsa.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 </Project>

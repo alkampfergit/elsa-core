@@ -21,4 +21,8 @@
         <PackageReference Include="Refit.Newtonsoft.Json" Version="6.0.94" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
+    </ItemGroup>
+
 </Project>

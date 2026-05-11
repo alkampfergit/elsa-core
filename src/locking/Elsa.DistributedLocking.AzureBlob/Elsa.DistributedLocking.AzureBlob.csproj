@@ -22,4 +22,8 @@
         <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
+    </ItemGroup>
+
 </Project>

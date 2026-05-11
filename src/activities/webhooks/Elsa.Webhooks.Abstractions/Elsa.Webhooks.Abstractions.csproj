@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="..\..\..\..\common.props"/>
-    <Import Project="..\..\..\..\configureawait.props"/>
+    <Import Project="..\..\..\..\common.props" />
+    <Import Project="..\..\..\..\configureawait.props" />
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
@@ -14,7 +14,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\core\Elsa.Abstractions\Elsa.Abstractions.csproj"/>
+        <ProjectReference Include="..\..\..\core\Elsa.Abstractions\Elsa.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 </Project>

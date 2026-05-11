@@ -22,4 +22,8 @@
         <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
+    </ItemGroup>
+
 </Project>
