@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32210.238
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11723.231 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Core", "src\core\Elsa.Core\Elsa.Core.csproj", "{300EE2D5-54C5-46F2-AD03-BB43589EA074}"
 EndProject
@@ -71,10 +71,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Client", "src\clients\Elsa.Client\Elsa.Client.csproj", "{2DA042D6-1E3C-4B15-B48E-BF45426C74E1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "servicebus", "servicebus", "{47EDFC14-BB99-44BF-A447-035D40D7347B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Rebus.AzureServiceBus", "src\servicebus\Elsa.Rebus.AzureServiceBus\Elsa.Rebus.AzureServiceBus.csproj", "{D3440E66-A871-4AB0-A1E0-8B3864ACA16A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Rebus.RabbitMq", "src\servicebus\Elsa.Rebus.RabbitMq\Elsa.Rebus.RabbitMq.csproj", "{FC656D28-1AA3-462D-9B18-A10436E47C08}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Activities.AzureServiceBus", "src\activities\Elsa.Activities.AzureServiceBus\Elsa.Activities.AzureServiceBus.csproj", "{DD607BC1-F9D9-4685-BC8F-A4056C2C31FA}"
 EndProject
@@ -184,8 +180,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Persistence.EntityFram
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Samples.Faulting", "src\samples\worker\Elsa.Samples.Faulting\Elsa.Samples.Faulting.csproj", "{76BF833E-3CAE-4402-99F1-B3BFD90622E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Activities.Rebus", "src\activities\Elsa.Activities.Rebus\Elsa.Activities.Rebus.csproj", "{9CBD9317-FD12-4BB9-A17D-CE7FA6B12DD8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Samples.UserTaskConsole", "src\samples\console\Elsa.Samples.UserTaskConsole\Elsa.Samples.UserTaskConsole.csproj", "{9BF25FEF-B667-4BB0-882D-6911B9F5B3C7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Samples.ForEachLoopConsole", "src\samples\console\Elsa.Samples.ForEachLoopConsole\Elsa.Samples.ForEachLoopConsole.csproj", "{43EC7BEE-35C5-4B70-AC39-C89696710310}"
@@ -264,8 +258,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{3BF2C5
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\publish-latest-dashboard-and-server-docker.yml = .github\workflows\publish-latest-dashboard-and-server-docker.yml
 		.github\workflows\publish-latest-dashboard-docker.yml = .github\workflows\publish-latest-dashboard-docker.yml
-		.github\workflows\publish-latest-server-docker.yml = .github\workflows\publish-latest-server-docker.yml
 		.github\workflows\publish-latest-elsa.yml = .github\workflows\publish-latest-elsa.yml
+		.github\workflows\publish-latest-server-docker.yml = .github\workflows\publish-latest-server-docker.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Samples.SignalApi", "src\samples\aspnet\Elsa.Samples.SignalApi\Elsa.Samples.SignalApi.csproj", "{3E2423CF-50E6-4D2B-8749-17B1EF540FE4}"
@@ -375,8 +369,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.WorkflowTesting.Api", "src\modules\workflowtesting\Elsa.WorkflowTesting.Api\Elsa.WorkflowTesting.Api.csproj", "{4A4DC44E-D50F-49B8-A9DE-DED26FC05166}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Samples.UniqueCorrelatedWorkflows", "src\samples\aspnet\Elsa.Samples.UniqueCorrelatedWorkflows\Elsa.Samples.UniqueCorrelatedWorkflows.csproj", "{4CD8293D-4544-4A23-BDEF-15B66D5E924F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Activities.RabbitMq", "src\activities\Elsa.Activities.RabbitMq\Elsa.Activities.RabbitMq.csproj", "{0D430863-8275-4880-BB09-C307B5EC3837}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.Samples.RabbitMqWorker", "src\samples\worker\Elsa.Samples.RabbitMqWorker\Elsa.Samples.RabbitMqWorker.csproj", "{67C58C2B-B873-47C8-B5B9-93B0587EE634}"
 EndProject
@@ -514,14 +506,6 @@ Global
 		{2DA042D6-1E3C-4B15-B48E-BF45426C74E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DA042D6-1E3C-4B15-B48E-BF45426C74E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DA042D6-1E3C-4B15-B48E-BF45426C74E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3440E66-A871-4AB0-A1E0-8B3864ACA16A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3440E66-A871-4AB0-A1E0-8B3864ACA16A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3440E66-A871-4AB0-A1E0-8B3864ACA16A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3440E66-A871-4AB0-A1E0-8B3864ACA16A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC656D28-1AA3-462D-9B18-A10436E47C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC656D28-1AA3-462D-9B18-A10436E47C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC656D28-1AA3-462D-9B18-A10436E47C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC656D28-1AA3-462D-9B18-A10436E47C08}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DD607BC1-F9D9-4685-BC8F-A4056C2C31FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD607BC1-F9D9-4685-BC8F-A4056C2C31FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD607BC1-F9D9-4685-BC8F-A4056C2C31FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -694,10 +678,6 @@ Global
 		{76BF833E-3CAE-4402-99F1-B3BFD90622E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76BF833E-3CAE-4402-99F1-B3BFD90622E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76BF833E-3CAE-4402-99F1-B3BFD90622E4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9CBD9317-FD12-4BB9-A17D-CE7FA6B12DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9CBD9317-FD12-4BB9-A17D-CE7FA6B12DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9CBD9317-FD12-4BB9-A17D-CE7FA6B12DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9CBD9317-FD12-4BB9-A17D-CE7FA6B12DD8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9BF25FEF-B667-4BB0-882D-6911B9F5B3C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9BF25FEF-B667-4BB0-882D-6911B9F5B3C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BF25FEF-B667-4BB0-882D-6911B9F5B3C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -958,10 +938,6 @@ Global
 		{4CD8293D-4544-4A23-BDEF-15B66D5E924F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CD8293D-4544-4A23-BDEF-15B66D5E924F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CD8293D-4544-4A23-BDEF-15B66D5E924F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D430863-8275-4880-BB09-C307B5EC3837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D430863-8275-4880-BB09-C307B5EC3837}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D430863-8275-4880-BB09-C307B5EC3837}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D430863-8275-4880-BB09-C307B5EC3837}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67C58C2B-B873-47C8-B5B9-93B0587EE634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{67C58C2B-B873-47C8-B5B9-93B0587EE634}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67C58C2B-B873-47C8-B5B9-93B0587EE634}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -1113,8 +1089,6 @@ Global
 		{E43FB9E7-7851-4880-B7EE-12B8CEE628D0} = {DA71CDAA-8DD3-4D5F-9FBD-8E4B37A2D925}
 		{2DA042D6-1E3C-4B15-B48E-BF45426C74E1} = {E43FB9E7-7851-4880-B7EE-12B8CEE628D0}
 		{47EDFC14-BB99-44BF-A447-035D40D7347B} = {DA71CDAA-8DD3-4D5F-9FBD-8E4B37A2D925}
-		{D3440E66-A871-4AB0-A1E0-8B3864ACA16A} = {47EDFC14-BB99-44BF-A447-035D40D7347B}
-		{FC656D28-1AA3-462D-9B18-A10436E47C08} = {47EDFC14-BB99-44BF-A447-035D40D7347B}
 		{DD607BC1-F9D9-4685-BC8F-A4056C2C31FA} = {B43B546E-23F3-46E8-ACB7-D04F05CDA180}
 		{7E14324E-7AD3-4498-AECE-C7B80FB691BC} = {38429825-88AF-4F0D-9E7C-A58EC5C86DA0}
 		{09718131-4D0E-4EF3-B3FB-116EBE1D8702} = {38429825-88AF-4F0D-9E7C-A58EC5C86DA0}
@@ -1169,7 +1143,6 @@ Global
 		{8A7C2A43-BABF-4961-81D8-D16A702A2EE8} = {C865B0FD-E505-48F0-BFAF-0D4D7C1B5CA1}
 		{F97339EF-424F-46F1-AD8D-B36B8C2F716E} = {C865B0FD-E505-48F0-BFAF-0D4D7C1B5CA1}
 		{76BF833E-3CAE-4402-99F1-B3BFD90622E4} = {E42743A0-FBDD-4150-9D53-6000496D9B87}
-		{9CBD9317-FD12-4BB9-A17D-CE7FA6B12DD8} = {B43B546E-23F3-46E8-ACB7-D04F05CDA180}
 		{9BF25FEF-B667-4BB0-882D-6911B9F5B3C7} = {FC9F520F-BA51-4AD2-BFEE-EF787798E734}
 		{43EC7BEE-35C5-4B70-AC39-C89696710310} = {FC9F520F-BA51-4AD2-BFEE-EF787798E734}
 		{335B3523-C8FC-471A-8107-2268D797C8C3} = {DA71CDAA-8DD3-4D5F-9FBD-8E4B37A2D925}
@@ -1250,7 +1223,6 @@ Global
 		{0327324E-0B80-4A6A-A7D6-DD521657666F} = {1B0F0880-8390-4A1C-9AE8-D13427626794}
 		{4A4DC44E-D50F-49B8-A9DE-DED26FC05166} = {1B0F0880-8390-4A1C-9AE8-D13427626794}
 		{4CD8293D-4544-4A23-BDEF-15B66D5E924F} = {22E75696-6FE9-436A-9097-EE21C603F818}
-		{0D430863-8275-4880-BB09-C307B5EC3837} = {B43B546E-23F3-46E8-ACB7-D04F05CDA180}
 		{67C58C2B-B873-47C8-B5B9-93B0587EE634} = {E42743A0-FBDD-4150-9D53-6000496D9B87}
 		{12E86018-047F-4B80-B2D2-B3C7334FB8DD} = {B43B546E-23F3-46E8-ACB7-D04F05CDA180}
 		{791D50F6-EAF2-4E20-9EDF-3BAF9CB7F796} = {B43B546E-23F3-46E8-ACB7-D04F05CDA180}

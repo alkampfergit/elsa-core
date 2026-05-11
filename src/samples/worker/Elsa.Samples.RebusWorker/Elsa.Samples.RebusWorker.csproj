@@ -12,12 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\activities\Elsa.Activities.Rebus\Elsa.Activities.Rebus.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Temporal.Quartz\Elsa.Activities.Temporal.Quartz.csproj" />
         <ProjectReference Include="..\..\..\core\Elsa\Elsa.csproj" />
         <ProjectReference Include="..\..\..\persistence\Elsa.Persistence.EntityFramework\Elsa.Persistence.EntityFramework.Core\Elsa.Persistence.EntityFramework.Core.csproj" />
         <ProjectReference Include="..\..\..\persistence\Elsa.Persistence.EntityFramework\Elsa.Persistence.EntityFramework.Sqlite\Elsa.Persistence.EntityFramework.Sqlite.csproj" />
-        <ProjectReference Include="..\..\..\servicebus\Elsa.Rebus.AzureServiceBus\Elsa.Rebus.AzureServiceBus.csproj" />
-        <ProjectReference Include="..\..\..\servicebus\Elsa.Rebus.RabbitMq\Elsa.Rebus.RabbitMq.csproj" />
     </ItemGroup>
 </Project>

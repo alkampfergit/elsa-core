@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="12.0.0" />
+        <PackageReference Include="MagicMapper" Version="14.0.1" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="3.1.7" />
         <PackageReference Include="YesSql.Core" Version="3.0.7" />
         <PackageReference Include="YesSql.Provider.Sqlite" Version="3.0.7" />

@@ -19,10 +19,8 @@
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Http.OpenApi\Elsa.Activities.Http.OpenApi.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Http\Elsa.Activities.Http.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.MassTransit\Elsa.Activities.MassTransit.csproj" />
-        <ProjectReference Include="..\..\..\activities\Elsa.Activities.RabbitMq\Elsa.Activities.RabbitMq.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Sql\Elsa.Activities.Sql.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Mqtt\Elsa.Activities.Mqtt.csproj" />
-        <ProjectReference Include="..\..\..\activities\Elsa.Activities.Rebus\Elsa.Activities.Rebus.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Telnyx\Elsa.Activities.Telnyx.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Temporal.Hangfire\Elsa.Activities.Temporal.Hangfire.csproj" />
         <ProjectReference Include="..\..\..\activities\Elsa.Activities.Temporal.Quartz\Elsa.Activities.Temporal.Quartz.csproj" />
@@ -66,8 +64,6 @@
         <ProjectReference Include="..\..\..\server\Elsa.Server.Api\Elsa.Server.Api.csproj" />
         <ProjectReference Include="..\..\..\server\Elsa.Server.Hangfire\Elsa.Server.Hangfire.csproj" />
         <ProjectReference Include="..\..\..\server\Elsa.Server.Orleans\Elsa.Server.Orleans.csproj" />
-        <ProjectReference Include="..\..\..\servicebus\Elsa.Rebus.AzureServiceBus\Elsa.Rebus.AzureServiceBus.csproj" />
-        <ProjectReference Include="..\..\..\servicebus\Elsa.Rebus.RabbitMq\Elsa.Rebus.RabbitMq.csproj" />
     </ItemGroup>
 
     <ItemGroup>
