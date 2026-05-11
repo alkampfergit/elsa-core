@@ -132,6 +132,67 @@ Alternatively, you might run `.\build-assets-and-run-dashboard-monolith.ps1` tha
 Another quick way to try out Elsa is to run `build-and-run-dashboard-monolith-with-docker.ps1`, which will use Docker Compose to build an image and start a container.
 When the container starts, you can reach the Elsa Dashboard at http://localhost:14000 
 
+## Maintenance Package Publishing
+
+This fork includes a dedicated GitHub Actions workflow for publishing maintenance NuGet packages to a private Azure Artifacts feed:
+
+- Workflow: `.github/workflows/publish-maintenance-to-azure-artifacts.yml`
+- Maintenance branch: `feature/spinoff-jarvis`
+- Trigger: pushing a Git tag that starts with `v`
+
+The workflow is intentionally branch-locked. It will fail unless the tagged commit belongs to `feature/spinoff-jarvis`.
+
+### Versioning
+
+The package version is taken directly from the tag name after removing the leading `v`.
+
+Examples:
+
+- `v2.15.2-custom.1` -> `2.15.2-custom.1`
+- `v2.15.2-jarvis.4` -> `2.15.2-jarvis.4`
+
+The tag must map to a valid NuGet version.
+
+### Required GitHub Configuration
+
+Create the following repository configuration before using the workflow:
+
+1. Repository variable: `AZURE_ARTIFACTS_FEED_URL`
+2. Repository secret: `AZURE_DEVOPS_TOKEN`
+
+`AZURE_ARTIFACTS_FEED_URL` must be the Azure Artifacts NuGet v3 feed URL.
+
+Examples:
+
+- Project-scoped feed: `https://pkgs.dev.azure.com/<organization>/<project>/_packaging/<feed>/nuget/v3/index.json`
+- Organization-scoped feed: `https://pkgs.dev.azure.com/<organization>/_packaging/<feed>/nuget/v3/index.json`
+
+`AZURE_DEVOPS_TOKEN` should be an Azure DevOps PAT with Packaging read and write access to the target feed.
+
+### How To Publish
+
+Create and push a tag from the maintenance branch:
+
+```bash
+git checkout feature/spinoff-jarvis
+git pull
+git tag v2.15.2-custom.1
+git push origin v2.15.2-custom.1
+```
+
+The workflow will:
+
+1. Verify that the tagged commit is on `feature/spinoff-jarvis`.
+2. Build the designer and ASP.NET bindings.
+3. Build and pack `Elsa.sln` using the tag-derived version.
+4. Publish the generated `.nupkg` files to Azure Artifacts.
+
+### Notes
+
+- The workflow uses .NET `10.0.x` because the solution currently includes `net10.0` targets.
+- The workflow publishes NuGet packages only. It does not push `.snupkg` symbol packages.
+- If the maintenance branch name changes later, update `RELEASE_BRANCH` in `.github/workflows/publish-maintenance-to-azure-artifacts.yml`.
+
 ## Roadmap
 
 Version 1.0

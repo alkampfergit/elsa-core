@@ -74,7 +74,7 @@ namespace Elsa.Services.Workflows
             return await _memoryCache.GetOrCreate(CacheKey, async entry =>
             {
                 entry.Monitor(_cacheSignal.GetToken(CacheKey));
-                return await GetActivityTypesInternalAsync(cancellationToken).ToDictionaryAsync(x => x.TypeName, cancellationToken);
+                return await GetActivityTypesInternalAsync(cancellationToken).ToDictionaryAsync(x => x.TypeName, cancellationToken: cancellationToken);
             });
         }
 

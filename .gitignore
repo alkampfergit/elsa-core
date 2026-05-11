@@ -54,7 +54,10 @@ node_modules/
 .eslintrc.yml
 
 #github
-.github/
+.github/*
+!.github/workflows/
+!.github/workflows/*.yml
+!.github/workflows/*.yaml
 
 #volatile
 App_Data/

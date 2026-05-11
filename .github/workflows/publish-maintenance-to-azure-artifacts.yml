@@ -1,0 +1,181 @@
+name: Publish Maintenance Packages to Azure Artifacts
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+env:
+  NODE_OPTIONS: --max-old-space-size=4096
+  RELEASE_BRANCH: feature/spinoff-jarvis
+  BUILD_CONFIGURATION: Release
+  DOTNET_VERSION: 10.0.x
+  NODE_VERSION: 18.12.1
+  AZURE_ARTIFACTS_SOURCE_NAME: azure-artifacts
+  AZURE_ARTIFACTS_FEED_URL_VARIABLE: AZURE_ARTIFACTS_FEED_URL
+  AZURE_DEVOPS_TOKEN_SECRET: AZURE_DEVOPS_TOKEN
+
+jobs:
+  prepare_release:
+    name: Validate Tag and Branch
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.value }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract package version from tag
+        id: version
+        shell: bash
+        run: |
+          tag_name="${GITHUB_REF_NAME}"
+          version="${tag_name#v}"
+
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$ ]]; then
+            echo "::error::Tag '$tag_name' does not map to a valid NuGet version. Use a tag like v2.15.2-custom.1"
+            exit 1
+          fi
+
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Verify tag commit belongs to maintenance branch
+        shell: bash
+        run: |
+          git fetch origin "refs/heads/${RELEASE_BRANCH}:refs/remotes/origin/${RELEASE_BRANCH}" --force
+
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" "refs/remotes/origin/${RELEASE_BRANCH}"; then
+            echo "::error::Tag '${GITHUB_REF_NAME}' does not point to a commit on '${RELEASE_BRANCH}'."
+            exit 1
+          fi
+
+  build_and_pack:
+    name: Build and Pack Maintenance Packages
+    runs-on: ubuntu-latest
+    needs: prepare_release
+
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: Password12!
+          POSTGRES_DB: elsa
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: '**/package-lock.json'
+
+      - name: Build Designer
+        working-directory: ./src/designer/elsa-workflows-studio
+        run: |
+          npm install --force
+          npm version "${{ needs.prepare_release.outputs.version }}" --allow-same-version --no-git-tag-version
+          npm run build
+
+      - name: Build Bindings
+        working-directory: ./src/designer/bindings/aspnet/Elsa.Designer.Components.Web
+        run: |
+          npm install --force
+          npm install -g webpack
+          npm install -g webpack-cli
+          npm run build
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build Elsa
+        run: dotnet build --configuration ${{ env.BUILD_CONFIGURATION }} /p:Version=${{ needs.prepare_release.outputs.version }}
+
+      - name: Pack Elsa
+        run: dotnet pack --configuration ${{ env.BUILD_CONFIGURATION }} /p:Version=${{ needs.prepare_release.outputs.version }} /p:PackageOutputPath=${{ github.workspace }}/out
+
+      - name: Upload NuGet packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-nuget-packages
+          path: out/*.nupkg
+
+  publish_to_azure_artifacts:
+    name: Publish to Azure Artifacts
+    runs-on: ubuntu-latest
+    needs:
+      - prepare_release
+      - build_and_pack
+
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Download NuGet packages
+        uses: actions/download-artifact@v4
+        with:
+          name: maintenance-nuget-packages
+          path: packages
+
+      - name: Configure Azure Artifacts source
+        shell: bash
+        env:
+          AZURE_ARTIFACTS_FEED_URL: ${{ vars[env.AZURE_ARTIFACTS_FEED_URL_VARIABLE] }}
+          AZURE_DEVOPS_TOKEN: ${{ secrets[env.AZURE_DEVOPS_TOKEN_SECRET] }}
+        run: |
+          if [[ -z "$AZURE_ARTIFACTS_FEED_URL" ]]; then
+            echo "::error::Repository variable 'AZURE_ARTIFACTS_FEED_URL' is required."
+            exit 1
+          fi
+
+          if [[ -z "$AZURE_DEVOPS_TOKEN" ]]; then
+            echo "::error::Repository secret 'AZURE_DEVOPS_TOKEN' is required."
+            exit 1
+          fi
+
+          dotnet nuget add source "$AZURE_ARTIFACTS_FEED_URL" \
+            --name "$AZURE_ARTIFACTS_SOURCE_NAME" \
+            --username "github-actions" \
+            --password "$AZURE_DEVOPS_TOKEN" \
+            --store-password-in-clear-text \
+            --configfile "$RUNNER_TEMP/nuget.config"
+
+      - name: Publish NuGet packages
+        shell: bash
+        run: |
+          shopt -s nullglob
+          packages=(packages/*.nupkg)
+
+          if (( ${#packages[@]} == 0 )); then
+            echo "::error::No NuGet packages were downloaded for publishing."
+            exit 1
+          fi
+
+          for package in "${packages[@]}"; do
+            dotnet nuget push "$package" \
+              --source "$AZURE_ARTIFACTS_SOURCE_NAME" \
+              --api-key AZ \
+              --skip-duplicate \
+              --configfile "$RUNNER_TEMP/nuget.config"
+          done
