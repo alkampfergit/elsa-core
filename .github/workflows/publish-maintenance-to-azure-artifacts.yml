@@ -162,6 +162,13 @@ jobs:
             exit 1
           fi
 
+          cat <<'EOF' > "$RUNNER_TEMP/nuget.config"
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <packageSources />
+          </configuration>
+          EOF
+
           dotnet nuget add source "$AZURE_ARTIFACTS_FEED_URL" \
             --name "$AZURE_ARTIFACTS_SOURCE_NAME" \
             --username "github-actions" \
