@@ -13,11 +13,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="YesSql.Core" Version="3.0.7" />
-        <PackageReference Include="YesSql.Provider.MySql" Version="3.0.7" />
-        <PackageReference Include="YesSql.Provider.PostgreSql" Version="3.0.7" />
-        <PackageReference Include="YesSql.Provider.Sqlite" Version="3.0.7" />
-        <PackageReference Include="YesSql.Provider.SqlServer" Version="3.0.7" />
+        <PackageReference Include="YesSql.Core" Version="5.4.7" />
+        <PackageReference Include="YesSql.Provider.MySql" Version="5.4.7" />
+        <PackageReference Include="YesSql.Provider.PostgreSql" Version="5.4.7" />
+        <PackageReference Include="YesSql.Provider.Sqlite" Version="5.4.7" />
+        <PackageReference Include="YesSql.Provider.SqlServer" Version="5.4.7" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,6 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Update="ConfigureAwait.Fody" Version="3.4.0" />
+      <PackageReference Update="Fody" Version="6.9.3">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
       <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 

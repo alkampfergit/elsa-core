@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
+using System.Net.Http;
 using Elsa.Activities.Http.Bookmarks;
 using Elsa.Activities.Http.Options;
 using Elsa.Models;
@@ -7,7 +8,7 @@ using Elsa.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Open.Linq.AsyncExtensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -31,7 +32,7 @@ public class HttpEndpointDocumentFilter : IDocumentFilter
 
     public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
     {
-        swaggerDoc.Tags ??= new List<OpenApiTag>();
+        swaggerDoc.Tags ??= new HashSet<OpenApiTag>();
 
         var tag = new OpenApiTag
         {
@@ -53,11 +54,14 @@ public class HttpEndpointDocumentFilter : IDocumentFilter
             swaggerDoc.Paths.Add(path, new OpenApiPathItem
             {
                 Description = first.Description,
-                Operations = grouping.ToDictionary(GetOperationType, httpEndpoint =>
+                Operations = grouping.ToDictionary(GetHttpMethod, httpEndpoint =>
                 {
                     var operation = new OpenApiOperation
                     {
-                        Tags = { tag },
+                        Tags = new HashSet<OpenApiTagReference>
+                        {
+                            new(tag.Name, swaggerDoc, null!)
+                        },
                     };
 
                     if (httpEndpoint.TargetType != null || httpEndpoint.JsonSchema != null)
@@ -65,7 +69,7 @@ public class HttpEndpointDocumentFilter : IDocumentFilter
                         operation.RequestBody = new OpenApiRequestBody
                         {
                             Required = true,
-                            Content =
+                            Content = new Dictionary<string, OpenApiMediaType>
                             {
                                 ["Unspecified"] = new OpenApiMediaType
                                 {
@@ -126,18 +130,18 @@ public class HttpEndpointDocumentFilter : IDocumentFilter
         return new HttpEndpointDescriptor(activityId, path, method, displayName, description, targetType, schema);
     }
 
-    private OperationType GetOperationType(HttpEndpointDescriptor httpEndpoint) =>
+    private HttpMethod GetHttpMethod(HttpEndpointDescriptor httpEndpoint) =>
         httpEndpoint.Method switch
         {
-            { } s when s.Equals(HttpMethods.Get, StringComparison.OrdinalIgnoreCase) => OperationType.Get,
-            { } s when s.Equals(HttpMethods.Post, StringComparison.OrdinalIgnoreCase) => OperationType.Post,
-            { } s when s.Equals(HttpMethods.Patch, StringComparison.OrdinalIgnoreCase) => OperationType.Patch,
-            { } s when s.Equals(HttpMethods.Delete, StringComparison.OrdinalIgnoreCase) => OperationType.Delete,
-            { } s when s.Equals(HttpMethods.Put, StringComparison.OrdinalIgnoreCase) => OperationType.Patch,
-            { } s when s.Equals(HttpMethods.Options, StringComparison.OrdinalIgnoreCase) => OperationType.Options,
-            { } s when s.Equals(HttpMethods.Head, StringComparison.OrdinalIgnoreCase) => OperationType.Head,
-            { } s when s.Equals(HttpMethods.Trace, StringComparison.OrdinalIgnoreCase) => OperationType.Trace,
-            _ => OperationType.Get
+            { } s when s.Equals(HttpMethods.Get, StringComparison.OrdinalIgnoreCase) => HttpMethod.Get,
+            { } s when s.Equals(HttpMethods.Post, StringComparison.OrdinalIgnoreCase) => HttpMethod.Post,
+            { } s when s.Equals(HttpMethods.Patch, StringComparison.OrdinalIgnoreCase) => HttpMethod.Patch,
+            { } s when s.Equals(HttpMethods.Delete, StringComparison.OrdinalIgnoreCase) => HttpMethod.Delete,
+            { } s when s.Equals(HttpMethods.Put, StringComparison.OrdinalIgnoreCase) => HttpMethod.Put,
+            { } s when s.Equals(HttpMethods.Options, StringComparison.OrdinalIgnoreCase) => HttpMethod.Options,
+            { } s when s.Equals(HttpMethods.Head, StringComparison.OrdinalIgnoreCase) => HttpMethod.Head,
+            { } s when s.Equals(HttpMethods.Trace, StringComparison.OrdinalIgnoreCase) => HttpMethod.Trace,
+            _ => HttpMethod.Get
         };
 }
 

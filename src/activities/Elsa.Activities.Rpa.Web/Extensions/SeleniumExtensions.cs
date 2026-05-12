@@ -7,7 +7,7 @@ using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Internal;
 using OpenQA.Selenium.Support.Extensions;
 using IAlert = OpenQA.Selenium.IAlert;
 using IWebElement = OpenQA.Selenium.IWebElement;
@@ -55,22 +55,22 @@ namespace Elsa.Activities.Rpa.Web
 
         public static void DoubleClick(this IWebElement element)
         {
-            var remote = (RemoteWebElement)element;
-            var action = new Actions(remote.WrappedDriver);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            var action = new Actions(driver);
             action.DoubleClick(element).Build().Perform();
         }
 
         public static void RightClick(this IWebElement element)
         {
-            var remote = (RemoteWebElement)element;
-            var action = new Actions(remote.WrappedDriver);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            var action = new Actions(driver);
             action.ContextClick(element).Build().Perform();
         }
 
         public static void JavaScriptClick(this IWebElement element)
         {
-            var remote = (RemoteWebElement)element;
-            remote.WrappedDriver.ExecuteJavaScript("arguments[0].click()", element);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            driver.ExecuteJavaScript("arguments[0].click()", element);
         }
 
         public static IWebElement GetElementByJQuery(this IWebDriver driver, string cssSelector)
@@ -79,8 +79,8 @@ namespace Elsa.Activities.Rpa.Web
         }
         public static IWebElement GetNestedElementByJQuery(this IWebElement element, string cssSelector)
         {
-            var remote = (RemoteWebElement)element;
-            return remote.WrappedDriver.ExecuteJavaScript<IWebElement>($"return $(arguments[0]).find(\"{cssSelector}\")[0]", element);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            return driver.ExecuteJavaScript<IWebElement>($"return $(arguments[0]).find(\"{cssSelector}\")[0]", element);
         }
 
         public static IWebElement GetFirstAvailableElementByJQuery(this IWebDriver driver, string cssSelector)
@@ -93,8 +93,8 @@ namespace Elsa.Activities.Rpa.Web
         /// </summary>
         public static void NativeClick(this IWebElement element)
         {
-            var remote = (RemoteWebElement)element;
-            var action = new Actions(remote.WrappedDriver);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            var action = new Actions(driver);
             action.Click(element).Build().Perform();
         }
 
@@ -105,24 +105,24 @@ namespace Elsa.Activities.Rpa.Web
             text = text.Replace(Environment.NewLine, @"\r\n");
             text = text.Replace("'", @"\'");
             text = JavaScriptEncoder.Default.Encode(text);
-            var remote = (RemoteWebElement)element;
+            var driver = ((IWrapsDriver)element).WrappedDriver;
             var field = element.IsInputTag() ? "value" : "innerText";
-            remote.WrappedDriver.ExecuteJavaScript($"arguments[0].{field} = '{text}'", element);
+            driver.ExecuteJavaScript($"arguments[0].{field} = '{text}'", element);
         }
         public static void JQuerySetText(this IWebElement element, string text)
         {
             text = text.Replace(Environment.NewLine, @"\r\n");
             text = text.Replace("'", @"\'");
             text = JavaScriptEncoder.Default.Encode(text);
-            var remote = (RemoteWebElement)element;
-            remote.WrappedDriver.ExecuteJavaScript(
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            driver.ExecuteJavaScript(
                $"$(arguments[0]).val('{text}'); " +
                 "$(arguments[0]).trigger('change'); ", element);
         }
         public static void SlideRangeConfirm(this IWebElement element, int valMax)
         {
-            var remote = (RemoteWebElement)element;
-            remote.WrappedDriver.ExecuteJavaScript(
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            driver.ExecuteJavaScript(
                 "$(arguments[0]).val('" + valMax + "'); " +
                 "$(arguments[0]).scope().moving = true; " +
                 "$(arguments[0]).scope().clicked = true; " +
@@ -134,8 +134,8 @@ namespace Elsa.Activities.Rpa.Web
             if (value == null)
                 value = "";
             value = value.Replace("'", @"\'");
-            var remote = (RemoteWebElement)element;
-            remote.WrappedDriver.ExecuteJavaScript($"arguments[0].{attribute} = '{value}'", element);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            driver.ExecuteJavaScript($"arguments[0].{attribute} = '{value}'", element);
         }
 
         public static bool IsInputTag(this IWebElement element)
@@ -169,13 +169,13 @@ namespace Elsa.Activities.Rpa.Web
 
         public static void ScrollToEnd(this IWebElement element)
         {
-            var remote = (RemoteWebElement)element;
-            remote.WrappedDriver.ExecuteJavaScript("arguments[0].scrollLeft = arguments[0].offsetWidth", element);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            driver.ExecuteJavaScript("arguments[0].scrollLeft = arguments[0].offsetWidth", element);
         }
 
         public static void Scroll(this IWebElement element, Direction direction, int offset)
         {
-            var remote = (RemoteWebElement)element;
+            var driver = ((IWrapsDriver)element).WrappedDriver;
             var scroll = direction == Direction.Right || direction == Direction.Down
                 ? "+="
                 : direction == Direction.Left || direction == Direction.Up
@@ -183,7 +183,7 @@ namespace Elsa.Activities.Rpa.Web
                     : throw new ArgumentException("Direction not supported");
 
             var scrolling = direction == Direction.Right || direction == Direction.Left ? "scrollLeft" : "scrollTop";
-            remote.WrappedDriver.ExecuteJavaScript($"arguments[0].{scrolling} {scroll} {offset}", element);
+            driver.ExecuteJavaScript($"arguments[0].{scrolling} {scroll} {offset}", element);
         }
 
         public static void ScrollWindow(this IWebDriver driver, Direction direction, int offset)
@@ -203,8 +203,8 @@ namespace Elsa.Activities.Rpa.Web
 
         public static T GetProperty<T>(this IWebElement element, string name)
         {
-            var remote = (RemoteWebElement)element;
-            return remote.WrappedDriver.ExecuteJavaScript<T>($"return arguments[0].{name}", element);
+            var driver = ((IWrapsDriver)element).WrappedDriver;
+            return driver.ExecuteJavaScript<T>($"return arguments[0].{name}", element);
         }
         public static async Task<IQueryable<HtmlNode>?> GetHtmlNodes(this ISearchContext element, TimeSpan timeout = default)
         {

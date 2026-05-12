@@ -19,9 +19,9 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
+      <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
       <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="5.3.0" />
-      <PackageReference Include="Selenium.Support" Version="3.141.0" />
+      <PackageReference Include="Selenium.Support" Version="4.43.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,6 +29,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Update="ConfigureAwait.Fody" Version="3.4.0" />
+      <PackageReference Update="Fody" Version="6.9.3">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
       <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 

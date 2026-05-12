@@ -23,12 +23,6 @@ namespace Elsa.Persistence.MongoDb.Services
                 var mongoUrl = new MongoUrl(connectionString);
                 var clientSettings = MongoClientSettings.FromConnectionString(connectionString);
 
-                //This will be removed in a future version, we started deprecation
-                if (!options.UseNewLinq3Provider)
-                {
-                    clientSettings.LinqProvider = MongoDB.Driver.Linq.LinqProvider.V2;
-                }
-
                 options.ConfigureMongoClientSettings(clientSettings);
                 client = options.MongoClientFactory(clientSettings, mongoUrl);
                 _clients[options.ConnectionString] = client;
