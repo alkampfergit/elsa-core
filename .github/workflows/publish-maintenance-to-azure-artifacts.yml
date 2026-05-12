@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.value }}
+      designer_version: ${{ steps.version.outputs.designer_value }}
 
     steps:
       - name: Checkout
@@ -38,12 +39,19 @@ jobs:
           tag_name="${GITHUB_REF_NAME}"
           version="${tag_name#v}"
 
-          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$ ]]; then
-            echo "::error::Tag '$tag_name' does not map to a valid NuGet version. Use a tag like v2.15.2-custom.1"
+          if [[ "$version" =~ ^([0-9]+\.[0-9]+\.[0-9]+)\.([0-9]+)$ ]]; then
+            base_version="${BASH_REMATCH[1]}"
+            revision="$((10#${BASH_REMATCH[2]}))"
+            designer_version="${base_version}-maintenance.${revision}"
+          elif [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$ ]]; then
+            designer_version="$version"
+          else
+            echo "::error::Tag '$tag_name' does not map to a supported package version. Use a tag like v2.15.2, v2.15.2-custom.1, or v2.15.2.0002"
             exit 1
           fi
 
           echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "designer_value=$designer_version" >> "$GITHUB_OUTPUT"
 
       - name: Verify tag commit belongs to maintenance branch
         shell: bash
@@ -91,7 +99,7 @@ jobs:
         working-directory: ./src/designer/elsa-workflows-studio
         run: |
           npm install --force
-          npm version "${{ needs.prepare_release.outputs.version }}" --allow-same-version --no-git-tag-version
+          npm version "${{ needs.prepare_release.outputs.designer_version }}" --allow-same-version --no-git-tag-version
           npm run build
 
       - name: Build Bindings
