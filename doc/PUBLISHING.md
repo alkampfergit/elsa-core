@@ -30,7 +30,7 @@ Three spinoff lines are maintained:
 |---|---|---|---|---|
 | `feature/spinoff-jarvis` | Elsa `2.16.1` | Full fork: net10, cleanup, library upgrades | `v2.16.1.0005` | `2.16.1.5` |
 | `spinoff-12-jarvis` | Elsa `2.12.0` | Full fork ported onto 2.12.0 (net10, cleanup, library upgrades) | `v2.12.100.1` | `2.12.100.1` |
-| `spinoff-12-jarvis-fixreferences` | Elsa `2.12.0` | Only AutoMapper → MagicMapper (plus these publish files) | `v2.12.0.0003` | `2.12.0.3` |
+| `spinoff-12-jarvis-fixreferences` | Elsa `2.12.0` | AutoMapper → MagicMapper, MongoDB.Driver 2.19 → 3.8.1 (plus these publish files) | `v2.12.0.0004` | `2.12.0.4` |
 
 `spinoff-12-jarvis` published `2.12.0.2` before moving to the `2.12.100.*` range, which is the
 first range of the full fork on 2.12.0. The `2.12.0.*` range from `2.12.0.3` on belongs to
@@ -48,7 +48,26 @@ This branch is official Elsa 2.12.0 with AutoMapper replaced by
 MagicMapper only targets `net8.0`, so the two projects that reference AutoMapper directly
 (`Elsa.Core`, `Elsa.Webhooks.Persistence.YesSql`) gain a `net8.0` target that uses MagicMapper,
 while their original targets keep AutoMapper 12. Applications on net8.0 or later therefore get
-no AutoMapper package at all; applications on older frameworks are unchanged. The branch must be pushed to `origin` before the tag,
+no AutoMapper package at all; applications on older frameworks are unchanged.
+
+### `spinoff-12-jarvis-fixreferences`: MongoDB.Driver 3 (from 2.12.0.4)
+
+The MongoDB persistence packages (`Elsa.Persistence.MongoDb`, `Elsa.Webhooks.Persistence.MongoDb`,
+`Elsa.WorkflowSettings.Persistence.MongoDb`, and `Elsa.Secrets.Persistence.MongoDb` through them)
+use `MongoDB.Driver` 3.8.1 and `MongoDb.Bson.NodaTime` 3.1.0 instead of 2.19.0 / 2.1.0. Driver 3
+no longer depends on the AWS SDK and has GridFS built in (drop `MongoDB.Driver.GridFS`).
+
+Driver 3 only has the LINQ3 provider, so the official 2.12.0 default of forcing LINQ2 is gone and
+`ElsaMongoDbOptions.UseNewLinq3Provider` is obsolete and ignored.
+`test/integration/Elsa.Core.IntegrationTests/Persistence/MongoDb/MongoDbSpecificationTests.cs`
+runs every Elsa query specification (plus ordering, paging, projections and the Retention
+cleanup query) against a real MongoDB and compares the result with in-memory evaluation; it
+passes identically on driver 2.19 (LINQ2) and 3.8.1 (LINQ3). Run it with a MongoDB on
+`localhost:27017` (or set `TEST_MONGODB`):
+
+```bash
+dotnet test test/integration/Elsa.Core.IntegrationTests --filter "FullyQualifiedName~MongoDb"
+``` The branch must be pushed to `origin` before the tag,
 because the workflow verifies the tag against `origin/<branch>`.
 
 The workflow file is read from the tagged commit, so each branch must carry a copy of the

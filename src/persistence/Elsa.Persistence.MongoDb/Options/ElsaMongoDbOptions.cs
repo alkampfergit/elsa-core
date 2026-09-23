@@ -16,6 +16,7 @@ namespace Elsa.Persistence.MongoDb.Options
         /// it has some breaking changes, so it is preferibly to enable only if you are really sure
         /// that it works without any problem in your project.
         /// </summary>
+        [System.Obsolete("MongoDB.Driver 3 only has the LINQ3 provider; this option is ignored.")]
         public bool UseNewLinq3Provider { get; set; }
     }
 }

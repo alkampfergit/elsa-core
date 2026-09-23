@@ -19,10 +19,6 @@ namespace Elsa.Persistence.MongoDb.Services
             {
                 var connectionString = options.ConnectionString;
                 var clientSettings = MongoClientSettings.FromConnectionString(connectionString);
-                if (options.UseNewLinq3Provider == false)
-                {
-                    clientSettings.LinqProvider = MongoDB.Driver.Linq.LinqProvider.V2;
-                }
                 client = new MongoClient(clientSettings);
                 _clients[options.ConnectionString] = client;
             }

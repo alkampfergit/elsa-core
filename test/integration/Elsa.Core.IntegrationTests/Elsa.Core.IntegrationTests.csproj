@@ -50,6 +50,10 @@
         <ProjectReference Include="..\..\..\src\activities\Elsa.Activities.Temporal.Hangfire\Elsa.Activities.Temporal.Hangfire.csproj"/>
         <ProjectReference Include="..\..\..\src\activities\Elsa.Activities.Temporal.Quartz\Elsa.Activities.Temporal.Quartz.csproj"/>
         <ProjectReference Include="..\..\..\src\persistence\Elsa.Persistence.MongoDb\Elsa.Persistence.MongoDb.csproj"/>
+        <ProjectReference Include="..\..\..\src\modules\retention\Elsa.Retention\Elsa.Retention.csproj"/>
+        <ProjectReference Include="..\..\..\src\activities\webhooks\Elsa.Webhooks.Persistence.MongoDb\Elsa.Webhooks.Persistence.MongoDb.csproj"/>
+        <ProjectReference Include="..\..\..\src\modules\secrets\Elsa.Secrets.Persistence.MongoDb\Elsa.Secrets.Persistence.MongoDb.csproj"/>
+        <ProjectReference Include="..\..\..\src\modules\workflowsettings\Elsa.WorkflowSettings.Persistence.MongoDb\Elsa.WorkflowSettings.Persistence.MongoDb.csproj"/>
         <ProjectReference Include="..\..\..\src\persistence\Elsa.Persistence.YesSql\Elsa.Persistence.YesSql.csproj"/>
         <ProjectReference Include="..\..\..\src\persistence\Elsa.Persistence.EntityFramework\Elsa.Persistence.EntityFramework.Core\Elsa.Persistence.EntityFramework.Core.csproj"/>
         <ProjectReference Include="..\..\..\src\persistence\Elsa.Persistence.EntityFramework\Elsa.Persistence.EntityFramework.Sqlite\Elsa.Persistence.EntityFramework.Sqlite.csproj"/>
