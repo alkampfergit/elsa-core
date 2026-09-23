@@ -4,7 +4,7 @@
     <Import Project="..\..\..\configureawait.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Description>
             Elsa is a set of workflow libraries and tools that enable lean and mean workflowing capabilities in any .NET Core application.
             This package provides common/shared logic for the following temporal (time-based) activities:
@@ -26,7 +26,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Polly" Version="7.2.2" />
+      <PackageReference Include="Polly" Version="8.6.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="ConfigureAwait.Fody" Version="3.4.0" />
+      <PackageReference Update="Fody" Version="6.9.3">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 </Project>

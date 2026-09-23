@@ -16,7 +16,7 @@ namespace Elsa.Scripting.JavaScript.Converters.Jint
             if (value is not byte[] buffer)
                 return false;
 
-            result = new ObjectWrapper(engine, buffer);
+            result = ObjectWrapper.Create(engine, buffer);
             
             return true;
         }

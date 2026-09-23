@@ -4,7 +4,7 @@
     <Import Project="..\..\..\configureawait.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Description>
             Elsa is a set of workflow libraries and tools that enable lean and mean workflowing capabilities in any .NET Core application.
             This package provides a Redis implementation of a distributed lock provider and distributed cache signaler.
@@ -13,12 +13,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DistributedLock.Redis" Version="1.0.1" />
-        <PackageReference Include="RedLock.net" Version="2.3.1" />
+        <PackageReference Include="DistributedLock.Redis" Version="1.1.1" />
+        <PackageReference Include="RedLock.net" Version="2.3.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\core\Elsa.Core\Elsa.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="ConfigureAwait.Fody" Version="3.4.0" />
+      <PackageReference Update="Fody" Version="6.9.3">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 </Project>

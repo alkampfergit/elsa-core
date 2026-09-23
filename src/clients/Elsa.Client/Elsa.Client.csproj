@@ -4,7 +4,7 @@
     <Import Project="..\..\..\configureawait.props" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Description>
             Elsa is a set of workflow libraries and tools that enable lean and mean workflowing capabilities in any .NET Core application.
             This package provides a client using Refit for Elsa's REST API endpoints.
@@ -13,12 +13,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-        <PackageReference Include="NodaTime" Version="3.0.9" />
-        <PackageReference Include="NodaTime.Serialization.JsonNet" Version="3.0.0" />
-        <PackageReference Include="Refit" Version="6.0.94" />
-        <PackageReference Include="Refit.HttpClientFactory" Version="6.0.94" />
-        <PackageReference Include="Refit.Newtonsoft.Json" Version="6.0.94" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="NodaTime" Version="3.3.2" />
+        <PackageReference Include="NodaTime.Serialization.JsonNet" Version="3.2.1" />
+        <PackageReference Include="Refit" Version="10.1.6" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="10.1.6" />
+        <PackageReference Include="Refit.Newtonsoft.Json" Version="10.1.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="ConfigureAwait.Fody" Version="3.4.0" />
+      <PackageReference Update="Fody" Version="6.9.3">
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="10.0.203" />
     </ItemGroup>
 
 </Project>
