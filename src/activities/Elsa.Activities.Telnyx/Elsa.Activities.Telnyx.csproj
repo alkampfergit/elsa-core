@@ -25,9 +25,9 @@
 
     <ItemGroup>
         <PackageReference Include="libphonenumber-csharp" Version="9.0.30" />
-        <PackageReference Include="Refit" Version="10.1.6" />
-        <PackageReference Include="Refit.HttpClientFactory" Version="10.1.6" />
-        <PackageReference Include="Refit.Newtonsoft.Json" Version="10.1.6" />
+        <PackageReference Include="Refit" Version="10.1.7" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="10.1.7" />
+        <PackageReference Include="Refit.Newtonsoft.Json" Version="10.1.7" />
         <PackageReference Include="System.Text.Encodings.Web" Version="10.0.7" />
     </ItemGroup>
 
