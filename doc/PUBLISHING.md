@@ -12,14 +12,32 @@ The workflow that does this is
 ## How it works
 
 1. The workflow triggers on any pushed tag matching `v*`.
-2. It checks out the tagged commit and confirms it is an ancestor of the `feature/spinoff-jarvis`
-   branch (the `RELEASE_BRANCH` env var in the workflow). **Tags created on any other branch will
-   fail the release** — merge your changes into `feature/spinoff-jarvis` first.
+2. It checks out the tagged commit and confirms it is an ancestor of one of the release branches
+   listed in the `RELEASE_BRANCHES` env var of the workflow (see [Release branches](#release-branches)).
+   **Tags created on any other branch will fail the release** — merge your changes into a release
+   branch and push it to `origin` first.
 3. It derives the package version from the tag name (see [Tag format](#tag-format) below).
 4. It builds the Designer (`npm`), the ASP.NET bindings, then runs
    `dotnet build` / `dotnet pack` with `/p:Version=<version>` for the whole solution.
 5. It uploads the resulting `.nupkg`/`.snupkg` files as a build artifact, then pushes them to the
    `azure-artifacts` NuGet source using `dotnet nuget push --skip-duplicate`.
+
+## Release branches
+
+Two spinoff lines are maintained, each based on a different official Elsa tag:
+
+| Branch | Based on | Tag example | NuGet version |
+|---|---|---|---|
+| `feature/spinoff-jarvis` | Elsa `2.16.1` | `v2.16.1.0005` | `2.16.1.5` |
+| `spinoff-12-jarvis` | Elsa `2.12.0` | `v2.12.0.0001` | `2.12.0.1` |
+
+Both publish to the same Azure Artifacts feed under the same package IDs, so always tag with the
+version prefix matching the branch's base (`v2.16.1.*` or `v2.12.0.*`) — otherwise the two lines
+become indistinguishable to consumers. The branch must be pushed to `origin` before the tag,
+because the workflow verifies the tag against `origin/<branch>`.
+
+The workflow file is read from the tagged commit, so each branch must carry a copy of the
+workflow whose `RELEASE_BRANCHES` includes it.
 
 ## Tag format
 
@@ -36,7 +54,8 @@ Any tag that doesn't match one of these is rejected by the workflow before anyth
 
 ## Releasing a new version
 
-1. Make sure your changes are merged into `feature/spinoff-jarvis` and pushed to `origin`.
+1. Make sure your changes are merged into the release branch (`feature/spinoff-jarvis` or
+   `spinoff-12-jarvis`) and that branch is pushed to `origin`.
 2. Decide the next version number, following the [tag format](#tag-format) above. Check existing
    tags with:
 
@@ -44,11 +63,16 @@ Any tag that doesn't match one of these is rejected by the workflow before anyth
    git tag --list "v*" --sort=-v:refname
    ```
 
-3. Tag the commit on `feature/spinoff-jarvis` and push the tag:
+3. Tag the commit on the release branch and push the tag:
 
    ```bash
+   # 2.16 line (feature/spinoff-jarvis)
    git tag v2.16.1.0005
    git push origin v2.16.1.0005
+
+   # 2.12 line (spinoff-12-jarvis)
+   git tag v2.12.0.0001
+   git push origin v2.12.0.0001
    ```
 
 4. Watch the **Publish Maintenance Packages to Azure Artifacts** run under the *Actions* tab. It

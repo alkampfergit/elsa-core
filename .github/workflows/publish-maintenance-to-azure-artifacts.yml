@@ -10,7 +10,8 @@ permissions:
 
 env:
   NODE_OPTIONS: --max-old-space-size=4096
-  RELEASE_BRANCH: feature/spinoff-jarvis
+  # Space-separated list of branches a release tag is allowed to point into.
+  RELEASE_BRANCHES: feature/spinoff-jarvis spinoff-12-jarvis
   BUILD_CONFIGURATION: Release
   DOTNET_VERSION: 10.0.x
   NODE_VERSION: 18.12.1
@@ -53,15 +54,18 @@ jobs:
           echo "value=$version" >> "$GITHUB_OUTPUT"
           echo "designer_value=$designer_version" >> "$GITHUB_OUTPUT"
 
-      - name: Verify tag commit belongs to maintenance branch
+      - name: Verify tag commit belongs to a maintenance branch
         shell: bash
         run: |
-          git fetch origin "refs/heads/${RELEASE_BRANCH}:refs/remotes/origin/${RELEASE_BRANCH}" --force
+          for branch in ${RELEASE_BRANCHES}; do
+            if git fetch origin "refs/heads/${branch}:refs/remotes/origin/${branch}" --force 2>/dev/null               && git merge-base --is-ancestor "$GITHUB_SHA" "refs/remotes/origin/${branch}"; then
+              echo "Tag '${GITHUB_REF_NAME}' points to a commit on '${branch}'."
+              exit 0
+            fi
+          done
 
-          if ! git merge-base --is-ancestor "$GITHUB_SHA" "refs/remotes/origin/${RELEASE_BRANCH}"; then
-            echo "::error::Tag '${GITHUB_REF_NAME}' does not point to a commit on '${RELEASE_BRANCH}'."
-            exit 1
-          fi
+          echo "::error::Tag '${GITHUB_REF_NAME}' does not point to a commit on any of: ${RELEASE_BRANCHES}."
+          exit 1
 
   build_and_pack:
     name: Build and Pack Maintenance Packages
