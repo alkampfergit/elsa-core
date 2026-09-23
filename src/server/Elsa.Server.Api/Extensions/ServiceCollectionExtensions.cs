@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Elsa;
 using Elsa.Models;
 using Elsa.Server.Api;
@@ -5,9 +6,7 @@ using Elsa.Server.Api.Extensions.SchemaFilters;
 using Elsa.Server.Api.Mapping;
 using Elsa.Server.Api.Services;
 using Elsa.Server.Api.Swagger.Examples;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -33,18 +32,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddControllers().AddNewtonsoftJson(setupNewtonsoftJson);
             services.AddRouting(options => { options.LowercaseUrls = true; });
 
-            services.AddVersionedApiExplorer(o =>
-            {
-                o.GroupNameFormat = "'v'VVV";
-                o.SubstituteApiVersionInUrl = true;
-            });
-
             services.AddApiVersioning(
                 options =>
                 {
                     options.ReportApiVersions = true;
                     options.DefaultApiVersion = ApiVersion.Default;
                     options.AssumeDefaultVersionWhenUnspecified = true;
+                }).AddApiExplorer(o =>
+                {
+                    o.GroupNameFormat = "'v'VVV";
+                    o.SubstituteApiVersionInUrl = true;
                 });
 
             services
@@ -68,17 +65,16 @@ namespace Microsoft.Extensions.DependencyInjection
                     c.ExampleFilters();
                     c.MapType<VersionOptions?>(() => new OpenApiSchema
                     {
-                        Type = PrimitiveType.String.ToString().ToLower(),
-                        Example = new OpenApiString("Latest"),
+                        Type = JsonSchemaType.String | JsonSchemaType.Null,
+                        Example = "Latest",
                         Description = "Any of Latest, Published, Draft, LatestOrPublished or a specific version number.",
-                        Nullable = true,
-                        Default = new OpenApiString("Latest")
+                        Default = "Latest"
                     });
 
                     c.MapType<Type>(() => new OpenApiSchema
                     {
-                        Type = PrimitiveType.String.ToString().ToLower(),
-                        Example = new OpenApiString("System.String, mscorlib")
+                        Type = JsonSchemaType.String,
+                        Example = "System.String, mscorlib"
                     });
 
                     //Allow enums to be displayed
