@@ -89,6 +89,8 @@ namespace Elsa.Options
 
             context.Configurer
                 .Subscriptions(s => s.StoreInMemory(store))
+                // Rebus needs a timeout manager for ICommandSender.DeferAsync; the in-memory one matches the in-memory transport (both are lost on restart).
+                .Timeouts(t => t.StoreInMemory())
                 .Transport(t => t.UseInMemoryTransport(transport, queueName, registerSubscriptionStorage: false));
         }
     }
