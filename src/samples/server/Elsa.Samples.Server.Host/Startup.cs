@@ -95,9 +95,6 @@ namespace Elsa.Samples.Server.Host
                     // Unless you have existing workflow definitions in the DB for which no triggers have yet been created.
                     //.ExcludeWorkflowProviderFromStartupIndexing<DatabaseWorkflowProvider>()
                     
-                    // For distributed hosting, configure Rebus with a real message broker such as RabbitMQ or Azure Service Bus.
-                    //.UseRabbitMq(Configuration.GetConnectionString("RabbitMq"))
-                
                     // When testing a distributed on your local machine, make sure each instance has a unique "container" name.
                     // This name is used to create unique input queues for pub/sub messaging where the competing consumer pattern is undesirable in order to deliver a message to each subscriber.
                     //.WithContainerName(Configuration.GetValue<string>("ContainerName") ?? System.Environment.MachineName)
