@@ -58,6 +58,7 @@
         <ProjectReference Include="..\..\..\src\persistence\Elsa.Persistence.EntityFramework\Elsa.Persistence.EntityFramework.Core\Elsa.Persistence.EntityFramework.Core.csproj"/>
         <ProjectReference Include="..\..\..\src\persistence\Elsa.Persistence.EntityFramework\Elsa.Persistence.EntityFramework.Sqlite\Elsa.Persistence.EntityFramework.Sqlite.csproj"/>
         <ProjectReference Include="..\..\..\src\activities\Elsa.Activities.AzureServiceBus\Elsa.Activities.AzureServiceBus.csproj" />
+        <ProjectReference Include="..\..\..\src\activities\Elsa.Activities.RabbitMq\Elsa.Activities.RabbitMq.csproj" />
     </ItemGroup>
 
 </Project>
