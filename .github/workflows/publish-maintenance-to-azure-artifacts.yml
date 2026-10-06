@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version to publish, e.g. 2.15.2, 2.15.2-custom.1, or 2.12.0.0005. Run this from one of the allowed release branches.'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -33,12 +39,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract package version from tag
+      - name: Extract package version
         id: version
         shell: bash
+        env:
+          DISPATCH_VERSION: ${{ github.event.inputs.version }}
         run: |
-          tag_name="${GITHUB_REF_NAME}"
-          version="${tag_name#v}"
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            ref_description="branch '${GITHUB_REF_NAME}' (manual run)"
+            version="${DISPATCH_VERSION#v}"
+          else
+            ref_description="tag '${GITHUB_REF_NAME}'"
+            version="${GITHUB_REF_NAME#v}"
+          fi
 
           if [[ "$version" =~ ^([0-9]+\.[0-9]+\.[0-9]+)\.([0-9]+)$ ]]; then
             base_version="${BASH_REMATCH[1]}"
@@ -47,24 +60,24 @@ jobs:
           elif [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$ ]]; then
             designer_version="$version"
           else
-            echo "::error::Tag '$tag_name' does not map to a supported package version. Use a tag like v2.15.2, v2.15.2-custom.1, or v2.15.2.0002"
+            echo "::error::${ref_description} does not map to a supported package version. Use something like 2.15.2, 2.15.2-custom.1, or 2.12.0.0005 (tags are the same, prefixed with 'v')."
             exit 1
           fi
 
           echo "value=$version" >> "$GITHUB_OUTPUT"
           echo "designer_value=$designer_version" >> "$GITHUB_OUTPUT"
 
-      - name: Verify tag commit belongs to a maintenance branch
+      - name: Verify the release commit belongs to a maintenance branch
         shell: bash
         run: |
           for branch in ${RELEASE_BRANCHES}; do
             if git fetch origin "refs/heads/${branch}:refs/remotes/origin/${branch}" --force 2>/dev/null               && git merge-base --is-ancestor "$GITHUB_SHA" "refs/remotes/origin/${branch}"; then
-              echo "Tag '${GITHUB_REF_NAME}' points to a commit on '${branch}'."
+              echo "Commit '${GITHUB_SHA}' belongs to '${branch}'."
               exit 0
             fi
           done
 
-          echo "::error::Tag '${GITHUB_REF_NAME}' does not point to a commit on any of: ${RELEASE_BRANCHES}."
+          echo "::error::Commit '${GITHUB_SHA}' does not belong to any of: ${RELEASE_BRANCHES}."
           exit 1
 
   build_and_pack:
