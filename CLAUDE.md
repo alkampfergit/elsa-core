@@ -86,20 +86,30 @@ Jarvis.Automation's `src/Directory.Packages.props`), use the
 where NuGet silently falls back to the nearest *different* version it can
 find (e.g. an unrelated `2.12.100` line) instead of erroring loudly.
 
-### Open question — not fully resolved as of this writing
+### Known gotcha — feed propagation delay after a fresh push
 
-In the same session that produced `v2.12.0.0005`, after confirming via
-GitHub Actions logs that **all 80 packages were built, packed, and
-successfully pushed** to the Azure Artifacts feed (every push logged
-"Your package was pushed", packed/pushed package lists matched 1:1),
-Jarvis.Automation's restore still reported every single `Elsa.*` package as
-"not found at 2.12.0.5" via `NU1603`, falling back to unrelated versions.
-The investigation (feed view/propagation delay? package source mapping
-issue? something else?) was **interrupted before a root cause was
-confirmed**. If you hit this again: don't assume it's just propagation
-lag — verify by re-restoring a few minutes later, and if it persists,
-check whether `Directory.Packages.props` really has the normalized
-version string before chasing feed issues.
+Right after `v2.12.0.0005` was published, GitHub Actions logs confirmed
+**all 80 packages were built, packed, and successfully pushed** to the
+Azure Artifacts feed (every push logged "Your package was pushed",
+packed/pushed package lists matched 1:1) — yet Jarvis.Automation's restore
+still reported every single `Elsa.*` package as "not found at 2.12.0.5" via
+`NU1603`, falling back to unrelated versions (`2.12.100`, an older line).
+
+**Confirmed root cause:** Azure Artifacts' NuGet v3 registration endpoint
+propagates a brand-new package version with a real delay (longer than
+nuget.org's), and/or caches a "this version doesn't exist" response from
+before the push. Re-running `dotnet nuget locals all --clear` followed by a
+clean restore some time later resolved every `Elsa.*` package to `2.12.0.5`
+with zero warnings — confirming the packages were never actually missing,
+just not yet visible through the feed's (and the local HTTP cache's) view.
+
+**If you hit this again:** don't chase package-source-mapping or
+credentials issues first. Clear local NuGet caches
+(`dotnet nuget locals all --clear`) and retry — if it still fails after
+that, wait and retry again before assuming something is actually broken.
+Only after ruling out propagation lag should you double check
+`Directory.Packages.props` has the normalized version string (see the
+leading-zero gotcha above).
 
 ## Release pipelines — there are two, for different purposes
 
