@@ -96,30 +96,14 @@ Hello World!
 
 Check out the [Quickstart guides](https://elsa-workflows.github.io/elsa-core/docs/next/quickstarts/quickstarts-console-hello-world) for more examples, including how to setup the Elsa Dashboard to create and manage visual workflows.
 
-## Docker
-
-A quick and easy way to give Elsa a spin is to run the following Docker command:
-
-```bash
-docker run -t -i -e ELSA__SERVER__BASEURL='http://localhost:13000' -p 13000:80 elsaworkflows/elsa-dashboard-and-server:latest
-```
-
-Then navigate to http://localhost:13000.
-
 ## Building From Source
 
 When you clone the repo, the solution file to open is `Elsa.sln` which should build with no issues.
 
 ### Elsa Dashboard & Client Assets
-If you want to run the sample project `ElsaDashboard.Samples.AspNetCore.Monolith.csproj`, you should build the client assets first.
+The Designer client assets must be built before `Elsa.Designer.Components.Web` can be packed.
 
 The easiest way to do that is by running the `.\build-assets.ps1` file in the root of the repo (where this README.md is as well).
-Alternatively, you might run `.\build-assets-and-run-dashboard-monolith.ps1` that will first build the client assets and then run the dashboard application to give Elsa a quick whirl.
-
-### Docker Compose
-
-Another quick way to try out Elsa is to run `build-and-run-dashboard-monolith-with-docker.ps1`, which will use Docker Compose to build an image and start a container.
-When the container starts, you can reach the Elsa Dashboard at http://localhost:14000 
 
 ## Roadmap
 

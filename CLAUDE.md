@@ -136,10 +136,9 @@ GitHub Release). This predates the Jarvis fork relationship and isn't part
 of the Jarvis release flow — don't use it to answer "how do I ship a fix,"
 use pipeline #1.
 
-There are also three Docker-image workflows
-(`publish-latest-{dashboard,server,dashboard-and-server}-docker.yml`),
-all `master`-only and manually dispatchable, pushing images to GitHub
-Packages. Also unrelated to the Jarvis release flow.
+The upstream Docker-image workflows, the `docker/` folder, every `src/samples`
+project and `test/component` (whose tests hosted on a sample) were removed from
+this fork: only the libraries, the Designer and their unit/integration tests remain.
 
 ## Practical checklist for "ship a fix to Jarvis.Automation"
 
@@ -187,3 +186,23 @@ default changed, and `ICommandSender.DeferAsync` was silently dropping its
 delay) that a plain `dotnet build` success did not catch. **If you bump any
 `Rebus*` package version here, run those test projects before assuming it's
 safe** — a clean build is not sufficient evidence.
+
+## Hangfire — removed from this fork
+
+`Elsa.Activities.Temporal.Hangfire`, `Elsa.Server.Hangfire` and the
+`Elsa.Samples.Timers.Hangfire` sample were deleted from this fork (they still
+exist upstream and were published up to `2.12.0.5`). Don't reintroduce them.
+The only remaining temporal (Timer/Cron/StartAt) implementation is
+`Elsa.Activities.Temporal.Quartz`, and workflow dispatch stays on the default
+Rebus-based dispatcher.
+
+**Consumer impact:** Jarvis.Automation at `2.12.0.5` still references both
+packages (`AddHangfireTemporalActivities()` and
+`ConfigureForElsaDispatchers(...)` in its `Startup.cs`). Before bumping it to
+a version without them it must switch to `AddQuartzTemporalActivities()`
+with a persistent Quartz store and drop the `ConfigureForElsaDispatchers`
+call. Jarvis keeps using Hangfire for its own recurring jobs; that is
+unaffected. Elsa's `StartJobs` hosted service (Temporal.Common) re-creates
+timer jobs from Elsa bookmarks/triggers at startup, so pending workflow
+timers should survive the scheduler switch, but verify that on a real
+instance before the production bump.
