@@ -29,6 +29,26 @@ namespace Elsa.Core.IntegrationTests.Extensions
             }
         }
 
+        [Theory(DisplayName = "Starting a hosted app which uses AddHangfireTemporalActivities should not throw"), AutoMoqData]
+        public void AddHangfireTemporalActivitiesDoesNotThrowDuringStartup([WithHangfire] ElsaHostBuilderBuilder hostBuilderBuilder)
+        {
+            var hostBuilder = hostBuilderBuilder.GetHostBuilder();
+
+            var cancellationSource = new CancellationTokenSource();
+            try
+            {
+                StartAppAndAllowToRun(hostBuilder, cancellationToken: cancellationSource.Token);
+            }
+            catch(Exception e)
+            {
+                Assert.False(true, $"Test failed because starting the app threw an exception:\n\n{e}");
+            }
+            finally
+            {
+                CancelAndSquelchExceptions(cancellationSource);
+            }
+        }
+
         [Theory(DisplayName = "Starting a hosted app which uses AddQuartzTemporalActivities should not throw"), AutoMoqData]
         public void AddQuartzTemporalActivitiesDoesNotThrowDuringStartup([WithQuartz] ElsaHostBuilderBuilder hostBuilderBuilder)
         {

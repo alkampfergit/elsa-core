@@ -13,8 +13,9 @@
             * Instant
             * Timer
 
-            In order to consume these activities, install a package which provides an implementation, such as:
+            In order to consume these activities, install a package which provides an implementation, such as either of:
 
+            * Elsa.Activities.Temporal.Hangfire
             * Elsa.Activities.Temporal.Quartz
         </Description>
         <PackageTags>elsa, workflows, timers, background tasks</PackageTags>

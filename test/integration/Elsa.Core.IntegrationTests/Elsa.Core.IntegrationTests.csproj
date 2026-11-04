@@ -28,6 +28,8 @@
         <PackageReference Include="YesSql.Provider.Sqlite" Version="3.0.7"/>
         <PackageReference Include="YesSql.Provider.PostgreSql" Version="3.0.7"/>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0"/>
+        <PackageReference Include="Hangfire.AspNetCore" Version="1.7.28"/>
+        <PackageReference Include="Hangfire.InMemory" Version="0.3.4"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0"/>
     </ItemGroup>
 
@@ -45,6 +47,7 @@
         <ProjectReference Include="..\..\..\src\core\Elsa\Elsa.csproj"/>
         <ProjectReference Include="..\..\shared\Elsa.Testing.Shared\Elsa.Testing.Shared.csproj"/>
         <ProjectReference Include="..\..\..\src\activities\Elsa.Activities.Temporal.Common\Elsa.Activities.Temporal.Common.csproj"/>
+        <ProjectReference Include="..\..\..\src\activities\Elsa.Activities.Temporal.Hangfire\Elsa.Activities.Temporal.Hangfire.csproj"/>
         <ProjectReference Include="..\..\..\src\activities\Elsa.Activities.Temporal.Quartz\Elsa.Activities.Temporal.Quartz.csproj"/>
         <ProjectReference Include="..\..\..\src\persistence\Elsa.Persistence.MongoDb\Elsa.Persistence.MongoDb.csproj"/>
         <ProjectReference Include="..\..\..\src\modules\retention\Elsa.Retention\Elsa.Retention.csproj"/>

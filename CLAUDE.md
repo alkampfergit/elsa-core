@@ -197,22 +197,44 @@ delay) that a plain `dotnet build` success did not catch. **If you bump any
 `Rebus*` package version here, run those test projects before assuming it's
 safe** — a clean build is not sufficient evidence.
 
-## Hangfire — removed from this fork
+## Hangfire — kept, because Jarvis.Automation still consumes it
 
-`Elsa.Activities.Temporal.Hangfire`, `Elsa.Server.Hangfire` and the
-`Elsa.Samples.Timers.Hangfire` sample were deleted from this fork (they still
-exist upstream and were published up to `2.12.0.5`). Don't reintroduce them.
-The only remaining temporal (Timer/Cron/StartAt) implementation is
-`Elsa.Activities.Temporal.Quartz`, and workflow dispatch stays on the default
-Rebus-based dispatcher.
+`Elsa.Activities.Temporal.Hangfire` and `Elsa.Server.Hangfire` were removed
+once (commit `9b88a7bd3`) and then restored, because Jarvis.Automation at
+`2.12.0.5` references both (`AddHangfireTemporalActivities()` and
+`ConfigureForElsaDispatchers(...)` in its `Startup.cs`) and any tag cut
+without them would break its restore. Keep both projects in `Elsa.sln` until
+Jarvis.Automation has actually dropped the references. Only the
+`Elsa.Samples.Timers.Hangfire` sample stayed deleted (all samples are gone).
 
-**Consumer impact:** Jarvis.Automation at `2.12.0.5` still references both
-packages (`AddHangfireTemporalActivities()` and
-`ConfigureForElsaDispatchers(...)` in its `Startup.cs`). Before bumping it to
-a version without them it must switch to `AddQuartzTemporalActivities()`
-with a persistent Quartz store and drop the `ConfigureForElsaDispatchers`
-call. Jarvis keeps using Hangfire for its own recurring jobs; that is
-unaffected. Elsa's `StartJobs` hosted service (Temporal.Common) re-creates
-timer jobs from Elsa bookmarks/triggers at startup, so pending workflow
-timers should survive the scheduler switch, but verify that on a real
-instance before the production bump.
+Facts about the Hangfire integration, verified from source (see also
+`Elsa.Activities.Temporal.Common`):
+
+- Elsa never treats the Hangfire job store as the source of truth. The
+  `StartJobs` hosted service (Temporal.Common) streams every Timer/Cron/StartAt
+  bookmark and trigger from the `Bookmarks`/`Triggers` stores at each start
+  and re-schedules them, and the `IndexTriggers` startup task re-schedules
+  definition triggers again. So running Hangfire on `Hangfire.InMemory`
+  (volatile) is safe for Elsa; the fork's own Quartz provider is in-memory by
+  default for the same reason.
+- `Elsa.Server.Hangfire` only matters when `UseHangfireDispatchers()` is
+  called. Jarvis.Automation never calls it, so its dispatchers are the default Rebus
+  in-memory `QueuingWorkflowDispatcher`; `ConfigureForElsaDispatchers` just
+  adds three never-used queue names to the Hangfire server.
+- The temporal package's Hangfire job arguments are three strings; no
+  NodaTime type is serialized as a job argument.
+- The scheduler abstraction (`IWorkflowInstanceScheduler`,
+  `IWorkflowDefinitionScheduler`, `ICrontabParser`) is public and replaceable
+  through `AddCommonTemporalActivities(Action<TimersOptions>)`, so
+  Jarvis.Automation can drop Hangfire later with Quartz or a custom in-process
+  scheduler without any change in this fork.
+- `StartJobs` only re-schedules after acquiring Elsa's `IDistributedLockProvider`
+  lock named `StartJobs`; if the lock is not granted it returns silently. The
+  default provider is a file lock, fine for a single node. Jarvis.Automation
+  does not configure a provider and runs as a single node (its
+  `ConfigureHangfirePersistence` is commented "singolo nodo"), so swapping
+  `UseMongoStorage` for `UseInMemoryStorage` there is safe.
+
+Jarvis.Automation keeps using Hangfire for its own recurring jobs (all
+registered with `RecurringJob.AddOrUpdate` at startup); that is unaffected by
+anything here.
